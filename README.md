@@ -40,6 +40,7 @@ https://workflowy.com/s/assessment/qJn45fBdVZn4atl3
 # 구현
 
 # DDD의 적용
+
 package meetingroom;
 
 import javax.persistence.*;
@@ -55,12 +56,10 @@ public class Supplies {
     private int phone;
     private int pc;
     private int beam;
-
+    
     @PrePersist
     public void onPrePersist(){
     }
-
-
     public Long getId() {
         return id;
     }
