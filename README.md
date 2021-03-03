@@ -24,3 +24,6 @@ https://workflowy.com/s/assessment/qJn45fBdVZn4atl3
 
 # 모형
 ![모형](https://user-images.githubusercontent.com/78134049/109769512-a8191f00-7c3d-11eb-88bb-334660ee98be.png)
+
+# 기능적/비기능적 요구사항에 대한 검증
+![모형2](https://user-images.githubusercontent.com/78134049/109770245-ad2a9e00-7c3e-11eb-9b18-1091ffd17ee0.png)
