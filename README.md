@@ -36,6 +36,7 @@ https://workflowy.com/s/assessment/qJn45fBdVZn4atl3
 4. Stock 메뉴에서 회의실에 대한 예약 정보를 조회한다.(6)
 
 # 헥사고날 아키텍쳐 다이어그램 도출 (Polyglot)
+![polyglot](https://user-images.githubusercontent.com/78134049/109812524-82a50900-7c6f-11eb-86e2-f0e2ae8d1ce2.png)
 
 # 구현
 
