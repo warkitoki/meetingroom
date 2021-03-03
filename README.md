@@ -268,16 +268,46 @@ server:
 
 
 # Polyglot Persistence
- - supplies 서비스의 경우, 다른 서비스들이 h2 저장소를 이용한 것과는 다르게 hsql을 이용하였다.
+ - stock 서비스의 경우, 다른 서비스들이 h2 저장소를 이용한 것과는 다르게 hsql을 이용하였다.
  - 이 작업을 통해 서비스들이 각각 다른 데이터베이스를 사용하더라도 전체적인 기능엔 문제가 없음을, 즉 Polyglot Persistence를 충족하였다.
 ![polyglot](https://user-images.githubusercontent.com/78134049/109788740-ef5dda80-7c52-11eb-9fd1-006ff3535e5d.png)
 
 # 동기식 호출(Req/Res 방식)과 Fallback 처리
- - room 서비스의 external/Supplies.java 내에 supplies 서비스가 존재하는지 확인하는 Service 대행 인터페이스(Proxy)를 FeignClient를 이용하여 구현하였다.
- < 코드 >
+ - room 서비스의 external/SuppliesService.java 내에 supplies 서비스가 존재하는지 확인하는 Service 대행 인터페이스(Proxy)를 FeignClient를 이용하여 구현하였다.
+```java
+@FeignClient(name="supplies", url="${api.supplies.url}")
+public interface SuppliesService {
+
+    @RequestMapping(method= RequestMethod.GET, path="/supplies/return")
+    public String s_return(@RequestBody Supplies supplies);
+}
+```
  
  - room 서비스의 room.java 내에 supplies 서비스 존재 확인 후 삭제할지, 않을지 결정.(@PrePersist)
- < 코드> 
+```java
+    @PrePersist
+    public void onPrePersist(){
+//        Searched searched = new Searched();
+//        BeanUtils.copyProperties(this, searched);
+//        searched.publishAfterCommit();
+
+        meetingroom.external.Supplies supplies = new meetingroom.external.Supplies();
+        // mappings goes here
+        supplies.setId(id);
+        String result = RoomApplication.applicationContext.getBean(meetingroom.external.SuppliesService.class).s_return(supplies);
+
+        if(result.equals("valid")){
+            System.out.println("Success!");
+        }
+        else{
+            /// room 번호가 유효하지 않을 때 강제로 예외 발생
+                System.out.println("FAIL!! InCorrect Room Nubmer or Not exist");
+                Exception ex = new Exception();
+                ex.notify();
+        }
+
+    }
+```
  
  - 동기식 호출에서는 호출 시간에 따른 커플링이 발생하여, Supplies 시스템에 장애가 나면 회의실을 삭제할 수 없다.
    -> room 서비스에서 회의실 삭제 시 에러 발생
@@ -285,9 +315,56 @@ server:
 
 # 비동기식 호출 (Pub/Sub 방식)
  - room 서비스 내 Room.java에서 아래와 같이 서비스 Pub 구현
- < 코드 >
+```java
+@Entity
+@Table(name="Room_table")
+public class Room {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
+    private String status;
+    private Integer floor;
+
+    @PostPersist
+    public void onPostPersist(){
+        Added added = new Added();
+        BeanUtils.copyProperties(this, added);
+        added.publishAfterCommit();
+    }
+```
  
  - supplies 서비스 내 PolicyHandler.java 에서 아래와 같이 Sub 구현
+```java
+@Service
+public class PolicyHandler{
+    @Autowired
+    SuppliesRepository suppliesRepository;
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void onStringEventListener(@Payload String eventString){
+
+    }
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void wheneverAdded_Use(@Payload Added added){
+
+        if(added.isMe()){
+            long roomid = added.getId();
+            Optional<Supplies> supplies = suppliesRepository.findById(roomid);
+            System.out.println("##### listener  : " + added.toJson());
+            if (supplies.isPresent()){
+                // default 값으로 각 비품을 1개씩 자동 할당함
+                supplies.get().setBeam(1);
+                supplies.get().setPc(1);
+                supplies.get().setPhone(1);
+                suppliesRepository.save(supplies.get());
+            }
+        }
+    }
+
+}
+```
 
 - 비동기 호출은 다른 서비스 하나가 비정상이어도 해당 메세지를 다른 메시지 큐에서 보관하고 있기에, 서비스가 다시 정상으로 돌아오게 되면 그 메시지를 처리하게 된다.
   -> supplies 서비스를 내려도 room 생성에는 문제 없이 동작한다.
