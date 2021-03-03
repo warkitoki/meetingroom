@@ -34,3 +34,62 @@ https://workflowy.com/s/assessment/qJn45fBdVZn4atl3
 3. 관리자가 회의실을 삭제 한다.(3) 
    - 삭제하면 비품 항목을 전부 삭제한다. (3 -> 5)
 4. Stock 메뉴에서 회의실에 대한 예약 정보를 조회한다.(6)
+
+# 헥사고날 아키텍쳐 다이어그램 도출 (Polyglot)
+
+# 구현
+
+# DDD의 적용
+supplies 서비스의 supplies.java
+package meetingroom;
+
+import javax.persistence.*;
+import org.springframework.beans.BeanUtils;
+import java.util.List;
+
+@Entity
+@Table(name="Supplies_table")
+public class Supplies {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id; 
+    private int phone;
+    private int pc;
+    private int beam;
+
+    @PrePersist
+    public void onPrePersist(){
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getPhone() {
+        return phone;
+    }
+
+    public void setPhone(int phone) {
+        this.phone = phone;
+    }
+    public int getPc() {
+        return pc;
+    }
+
+    public void setPc(int pc) {
+        this.pc = pc;
+    }
+    public int getBeam() {
+        return beam;
+    }
+
+    public void setBeam(int beam) {
+        this.beam = beam;
+    }
+}
