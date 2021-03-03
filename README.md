@@ -26,7 +26,7 @@ https://workflowy.com/s/assessment/qJn45fBdVZn4atl3
 ![모형](https://user-images.githubusercontent.com/78134049/109769512-a8191f00-7c3d-11eb-88bb-334660ee98be.png)
 
 # 기능적/비기능적 요구사항에 대한 검증
-![모형2](https://user-images.githubusercontent.com/78134049/109770245-ad2a9e00-7c3e-11eb-9b18-1091ffd17ee0.png)
+![모형2](https://user-images.githubusercontent.com/78134049/109780714-9ab66180-7c4a-11eb-8437-438f08662859.png)
 
 1. 비품 등록 서비스를 생성한다. (1)
 2. 관리자가 회의실을 생성 및 등록한다.(2)
