@@ -154,6 +154,7 @@ server:
 # Polyglot Persistence
  - supplies 서비스의 경우, 다른 서비스들이 h2 저장소를 이용한 것과는 다르게 hsql을 이용하였다.
  - 이 작업을 통해 서비스들이 각각 다른 데이터베이스를 사용하더라도 전체적인 기능엔 문제가 없음을, 즉 Polyglot Persistence를 충족하였다.
+![polyglot](https://user-images.githubusercontent.com/78134049/109788740-ef5dda80-7c52-11eb-9fd1-006ff3535e5d.png)
 
 # 동기식 호출(Req/Res 방식)과 Fallback 처리
  - room 서비스의 external/Supplies.java 내에 supplies 서비스가 존재하는지 확인하는 Service 대행 인터페이스(Proxy)를 FeignClient를 이용하여 구현하였다.
