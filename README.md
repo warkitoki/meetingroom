@@ -56,6 +56,100 @@ supplies 서비스의 PolicyHandler.java
 API Gateway를 통해 마이크로 서비스들의 진입점을 하나로 진행하였다.
  - Conference 서비스의 경우, 다른 서비스들이 h2 저장소를 이용한 것과는 다르게 hsql을 이용하였다.
  - 이 작업을 통해 서비스들이 각각 다른 데이터베이스를 사용하더라도 전체적인 기능엔 문제가 없음을, 즉 Polyglot Persistence를 충족하였다.
+```springboot
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: conference
+          uri: http://localhost:8081
+          predicates:
+            - Path=/conferences/** 
+        - id: reserve
+          uri: http://localhost:8082
+          predicates:
+            - Path=/reserves/** 
+        - id: room
+          uri: http://localhost:8083
+          predicates:
+            - Path=/rooms/** 
+        - id: schedule
+          uri: http://localhost:8084
+          predicates:
+            - Path= /reserveTables/**
+        - id: room
+          uri: http://localhost:8085
+          predicates:
+            - Path=/stockTables/** 
+        - id: room
+          uri: http://localhost:8086
+          predicates:
+            - Path=/suppliess/** 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: conference
+          uri: http://conference:8080
+          predicates:
+            - Path=/conferences/** 
+        - id: reserve
+          uri: http://reserve:8080
+          predicates:
+            - Path=/reserves/** 
+        - id: room
+          uri: http://room:8080
+          predicates:
+            - Path=/rooms/** 
+        - id: schedule
+          uri: http://schedule:8080
+          predicates:
+            - Path= /reserveTables/**
+        - id: stock
+          uri: http://stock:8080
+          predicates:
+            - Path= /stockTables/**
+        - id: supplies
+          uri: http://supplies:8080
+          predicates:
+            - Path= /suppliess/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
+
+```
+
 
 # Polyglot Persistence
  - supplies 서비스의 경우, 다른 서비스들이 h2 저장소를 이용한 것과는 다르게 hsql을 이용하였다.
