@@ -63,9 +63,103 @@ mvn spring-boot:run
 
 # DDD의 적용
 supplies 서비스의 supplies.java
-< 소스코드 >
+```java
+package meetingroom;
+
+import javax.persistence.*;
+import org.springframework.beans.BeanUtils;
+import java.util.List;
+
+@Entity
+@Table(name="Supplies_table")
+public class Supplies {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id; 
+    private int phone;
+    private int pc;
+    private int beam;
+
+    @PrePersist
+    public void onPrePersist(){
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getPhone() {
+        return phone;
+    }
+
+    public void setPhone(int phone) {
+        this.phone = phone;
+    }
+    public int getPc() {
+        return pc;
+    }
+
+    public void setPc(int pc) {
+        this.pc = pc;
+    }
+    public int getBeam() {
+        return beam;
+    }
+
+    public void setBeam(int beam) {
+        this.beam = beam;
+    }
+}
+```
 supplies 서비스의 PolicyHandler.java
-< 소스코드 >
+```java
+package meetingroom;
+
+import meetingroom.config.kafka.KafkaProcessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class PolicyHandler{
+    @Autowired
+    SuppliesRepository suppliesRepository;
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void onStringEventListener(@Payload String eventString){
+
+    }
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void wheneverAdded_Use(@Payload Added added){
+
+        if(added.isMe()){
+            long roomid = added.getId();
+            Optional<Supplies> supplies = suppliesRepository.findById(roomid);
+            System.out.println("##### listener  : " + added.toJson());
+            if (supplies.isPresent()){
+                // default 값으로 각 비품을 1개씩 자동 할당함
+                supplies.get().setBeam(1);
+                supplies.get().setPc(1);
+                supplies.get().setPhone(1);
+                suppliesRepository.save(supplies.get());
+            }
+        }
+    }
+
+}
+```
 
 - 적용 후 REST API의 테스트를 통해 정상적으로 작동함을 알 수 있었다.
  < 스샷 >
