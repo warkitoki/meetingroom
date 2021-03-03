@@ -39,6 +39,27 @@ https://workflowy.com/s/assessment/qJn45fBdVZn4atl3
 ![polyglot](https://user-images.githubusercontent.com/78134049/109812524-82a50900-7c6f-11eb-86e2-f0e2ae8d1ce2.png)
 
 # 구현
+도출해낸 헥사고날 아키텍처에 맞게, 로컬에서 SpringBoot를 이용해 Maven 빌드 하였다. 각각의 포트넘버는 8081 ~ 8086, 8088 이다.
+
+```linux
+cd conference
+mvn spring-boot:run
+
+cd gateway
+mvn spring-boot:run
+
+cd reserve
+mvn spring-boot:run
+
+cd schedule
+mvn spring-boot:run
+
+cd supplies
+mvn spring-boot:run
+
+cd stock
+mvn spring-boot:run
+```
 
 # DDD의 적용
 supplies 서비스의 supplies.java
