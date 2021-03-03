@@ -40,7 +40,6 @@ https://workflowy.com/s/assessment/qJn45fBdVZn4atl3
 # 구현
 
 # DDD의 적용
-supplies 서비스의 supplies.java
 package meetingroom;
 
 import javax.persistence.*;
@@ -50,7 +49,6 @@ import java.util.List;
 @Entity
 @Table(name="Supplies_table")
 public class Supplies {
-
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id; 
