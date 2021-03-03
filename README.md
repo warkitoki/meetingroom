@@ -23,4 +23,4 @@ https://workflowy.com/s/assessment/qJn45fBdVZn4atl3
 
 
 # 모형
-https://github.com/warkitoki/meetingroom/issues/1#issue-820837694
+![모형](https://user-images.githubusercontent.com/78134049/109769512-a8191f00-7c3d-11eb-88bb-334660ee98be.png)
