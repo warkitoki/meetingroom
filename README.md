@@ -56,7 +56,7 @@ supplies 서비스의 PolicyHandler.java
 API Gateway를 통해 마이크로 서비스들의 진입점을 하나로 진행하였다.
  - Conference 서비스의 경우, 다른 서비스들이 h2 저장소를 이용한 것과는 다르게 hsql을 이용하였다.
  - 이 작업을 통해 서비스들이 각각 다른 데이터베이스를 사용하더라도 전체적인 기능엔 문제가 없음을, 즉 Polyglot Persistence를 충족하였다.
-```springboot
+```java
 server:
   port: 8088
 
